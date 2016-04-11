@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FestA</string>
+    <string name="content_description">LogoImage</string>
+    <string name="VerticalBar">|</string>
+</resources>

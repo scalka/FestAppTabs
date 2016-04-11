@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#8f243b</color>
+    <color name="colorPrimaryDark">#8F243B</color>
+    <color name="colorAccent">#ffffff</color>
+
+    <color name="green">#A6BDAB</color>
+    <color name="yellow">#FCC783</color>
+    <color name="orange">#FEB08F</color>
+    <color name="pink">#F47A89</color>
+    <color name="red">#DA4C5A</color>
+    <color name="transparent">#00FFFFFF</color>
+
+
+    <color name="electro">#e7897d</color>
+    <color name="hiphop">#fdd0b2</color>
+    <color name="reggae">#d3616f</color>
+    <color name="rock">#35346b</color>
+
+    <color name="background">#eeeeee</color>
+
+
+
+</resources>
