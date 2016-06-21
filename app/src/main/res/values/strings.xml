@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">FestA</string>
+    <string name="app_name">FestApp</string>
     <string name="content_description">LogoImage</string>
     <string name="VerticalBar">|</string>
+    <string name="genre_logo">genre logo</string>
+    <string name="ticket_image">ticket image</string>
+    <string name="save">Save</string>
+    <string name="buy">Buy</string>
+    <string name="euro">\u20AC</string>
+    <string name="google_api_id">able-campaign-116516</string>
 </resources>

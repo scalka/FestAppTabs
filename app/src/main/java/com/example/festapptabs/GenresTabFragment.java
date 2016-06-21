@@ -1,7 +1,6 @@
 package com.example.festapptabs;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,25 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
+// Fragment where user can pick genre and then the new Activity opens
 public class GenresTabFragment extends Fragment {
 
     public final static String ID_EXTRA = "com.example.festapptabs._ID";
-    public String whereCl = null;
-    public String[] myStringArray;
-    public int genreClicked;
-    public int count = 1;
-    private ListHelper dbListHelper = null;
-    private Cursor ourCursor = null;
+    private String[] myStringArray;
+    private int genreClicked;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.genres_tab_frag_2, container, false);
-
+        View rootView = inflater.inflate(R.layout.genres_tab_frag, container, false);
         final GridView myGridView = (GridView) rootView.findViewById(R.id.gridview);
-
+        //Image Adapter
         myGridView.setAdapter(new ImageAdapter(getContext()));
+        //Listener for picked elements in grid view
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,5 +57,4 @@ public class GenresTabFragment extends Fragment {
         });
         return rootView;
     }
-
 }

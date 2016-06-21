@@ -1,81 +1,52 @@
 package com.example.festapptabs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.sql.SQLException;
-
-// Activity with description of a particular festival
+// Activity with description of a particular festival with content from the database
 public class FestDesc extends Activity {
-    public final static String ID_TICKET = "com.example.festlistdb._ID";
-    public static final String EURO = "\u20AC";
-    public ListHelper dbFestListHelper = null;
-    String passedVar = null;
-    String passedMarkerId = null;
-    String idMarker = null;
-    String name = null;
-    String place = null;
-    String date = null;
-    String description = null;
-    int position = 0;
-    String logoImg = null;
-    String genre = null;
-    int price = 0;
-    int daysNum = 0;
-    String website;
-    String ticketImg;
-    int savedOldValue;
-    ImageView logo;
-    private TextView passedView = null;
-    private TextView festDate = null;
-    private TextView festPlace = null;
-    private TextView festGenere = null;
-    private TextView festPrice = null;
-    private TextView festDaysNum = null;
-    private TextView festDescr = null;
+
+    private String idMarker;
+    private int id = 0;
+    private int position = 0;
+    private String website;
+    private String ticketImg;
     private Button saveEvent;
     private Button buyTickets;
-    private Cursor ourCursor = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fest_desc);
-
-        passedView = (TextView) findViewById(R.id.festDescName); // festival name
-        festPlace = (TextView) findViewById(R.id.festPlace);
-        festDate = (TextView) findViewById(R.id.festDate);
-        festGenere = (TextView) findViewById(R.id.festGenere);
-        festPrice = (TextView) findViewById(R.id.festPrice);
-        festDaysNum = (TextView) findViewById(R.id.festDaysNum);
-        festDescr = (TextView) findViewById(R.id.festDescr);
-
-        saveEvent = (Button) findViewById(R.id.saveEvent);
-        buyTickets = (Button) findViewById(R.id.buyTickets);
-
-
-        logo = (ImageView) findViewById(R.id.logoImg);
+        setContentView(R.layout.fest_desc_activity);
+        //text views
+        TextView passedView = (TextView) findViewById(R.id.festDescName);
+        TextView festPlace = (TextView) findViewById(R.id.festPlace);
+        TextView festDate = (TextView) findViewById(R.id.festDate);
+        TextView Genre = (TextView) findViewById(R.id.festGenre);
+        TextView festPrice = (TextView) findViewById(R.id.festPrice);
+        TextView festDaysNum = (TextView) findViewById(R.id.festDaysNum);
+        TextView festDescr = (TextView) findViewById(R.id.festDescr);
+        saveEvent = (Button) findViewById(R.id.saveEvent); // save event button
+        buyTickets = (Button) findViewById(R.id.buyTickets); //but tickets button
+        ImageView logo = (ImageView) findViewById(R.id.logoImg);
         // ListHelper - A SQLiteOpenHelper class to manage database creation and version management.
-        dbFestListHelper = new ListHelper(FestDesc.this);
-        try {
-            dbFestListHelper.openDataBase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        ourCursor = dbFestListHelper.getCursor();
-
-
-        //get passed var from extras
-        passedMarkerId = getIntent().getStringExtra(MapTabFragment.MARKER_ID);
-        passedVar = getIntent().getStringExtra(MyTicketsFragment.ID_EXTRA);
+        ListHelper dbFestListHelper = new ListHelper(FestDesc.this);
+        // opening database method
+        dbFestListHelper.openDataBase();
+        Cursor cursor = dbFestListHelper.getCursor();
+        //get passed variables from extras
+        String passedMarkerId = getIntent().getStringExtra(MapTabFragment.MARKER_ID);
+        String passedVar = getIntent().getStringExtra(MyTicketsFragment.ID_EXTRA);
         //picked festival
         try {
             if (passedVar == null) {
@@ -88,23 +59,21 @@ public class FestDesc extends Activity {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        ourCursor.moveToPosition(position);
+        // moving to the correct position in a database table
+        cursor.moveToPosition(position);
         //getting content from database
-        name = dbFestListHelper.getName(ourCursor);
-        place = dbFestListHelper.getPlace(ourCursor);
-        date = dbFestListHelper.getDate(ourCursor);
-        description = dbFestListHelper.getDescr(ourCursor);
-        logoImg = dbFestListHelper.getLogo(ourCursor);
-        genre = dbFestListHelper.getGenre(ourCursor);
-        price = dbFestListHelper.getPrice(ourCursor);
-        daysNum = dbFestListHelper.getDays(ourCursor);
-        website = dbFestListHelper.getWebsite(ourCursor);
-        ticketImg = dbFestListHelper.getTicketImg(ourCursor);
-
-
-        savedOldValue = dbFestListHelper.getSavedId(ourCursor);
-
-
+        id = Festival.getId(cursor);
+        String name = Festival.getName(cursor);
+        String place = Festival.getPlace(cursor);
+        String date = Festival.getDate(cursor);
+        String description = Festival.getDescr(cursor);
+        String logoImg = Festival.getLogo(cursor);
+        String genre = Festival.getGenre(cursor);
+        int price = Festival.getPrice(cursor);
+        int daysNum = Festival.getDays(cursor);
+        website = Festival.getWebsite(cursor);
+        ticketImg = Festival.getTicketImg(cursor);
+        //resource Id for a logo
         int resID = getResources().getIdentifier(logoImg,
                 "drawable", getPackageName());
         logo.setImageResource(resID);
@@ -112,39 +81,58 @@ public class FestDesc extends Activity {
         passedView.setText(name);
         festPlace.setText(place);
         festDate.setText(date);
-        festGenere.setText(genre);
-        festPrice.setText(EURO + price);
-        festDaysNum.setText(daysNum + " days");
+        Genre.setText(genre);
+        String festivalPrice = getString(R.string.euro) + price;
+        festPrice.setText(festivalPrice);
+        String numberOfDays = daysNum + getDaysCorrectly(daysNum);
+        festDaysNum.setText(numberOfDays);
         festDescr.setText(description);
-        //button listener and intent to go to the website
-
+        // closing database
+        dbFestListHelper.close();
+        cursor.close();
+        //button listener and intent to go to the external website
+        buyTicketsButton();
+        //button listener to save the event in shared preferences
+        saveEventButton();
+    }
+    // Web view method
+    private void buyTicketsButton() {
         buyTickets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("buytickets clicked", website);
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
                 startActivity(i);
             }
         });
-
-        saveEventButton();
-
-
     }
-
-    public void saveEventButton() {
-        saveEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dbFestListHelper = new ListHelper(FestDesc.this);
-                try {
-                    dbFestListHelper.openDataBase();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+    // saving button listener
+    private void saveEventButton() {
+            saveEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveSharedPreferences();
                 }
-                dbFestListHelper.updateSavedTicket(ourCursor);
-            }
-        });
+            });
+    }
+    // saving ticket image name as shared preferences
+    private void saveSharedPreferences(){
+        SharedPreferences sharedPreferences = getSharedPreferences("SavedTickets", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String savedId = String.valueOf(id);
+        editor.putString(savedId, ticketImg);
+        // Problem synopsis: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background (at line 167)
+        editor.apply();
+        Toast.makeText(this, "Ticket was saved successfully", Toast.LENGTH_LONG).show();
+    }
+    // check if it is one day or more days and display correct word
+    public static String getDaysCorrectly(int daysNum){
+        String dayOrDays = null;
+        if (daysNum == 1) {
+            dayOrDays = " day";
+        } else if (daysNum > 1) {
+            dayOrDays = " days";
+        }
+        return dayOrDays;
     }
 }
 

@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+// Fragment with implemented Google Map
 public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
 
     public final static String MARKER_ID = "com.example.festlistdb.MARKER_ID";
@@ -38,10 +38,9 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
     private static final LatLng TOMORROWLAND = new LatLng(51.091273, 4.385476);
     private static final LatLng WIRELESS = new LatLng(51.564080, -0.107043);
     private static final LatLng WOODSTOCK = new LatLng(52.610088, 14.668109);
-    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-    MapView mapView;
-    GoogleMap mMap;
-    GoogleMap.OnInfoWindowClickListener MyOnInfoWindowClickListener
+    private MapView mapView;
+    private GoogleMap mMap;
+    private final GoogleMap.OnInfoWindowClickListener MyOnInfoWindowClickListener
             = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
@@ -52,25 +51,10 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
             startActivity(i);
         }
     };
-    private Marker mBerlinSummerRave;
-    private Marker mBoardmasters;
-    private Marker mForbiddenfruit;
-    private Marker mHipHopKemp;
-    private Marker mHurricane;
-    private Marker mOnelove;
-    private Marker mOutlook;
-    private Marker mPaleo;
-    private Marker mReggaeland;
-    private Marker mSonar;
-    private Marker mSummerjam;
-    private Marker mSwedenRockFest;
-    private Marker mTommorowland;
-    private Marker mWireless;
-    private Marker mWoodstock;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.map_tab_frag_3, container, false);
+        View v = inflater.inflate(R.layout.map_tab_frag, container, false);
 
         // Gets the MapView from the XML layout and creates it
         mapView = (MapView) v.findViewById(R.id.mapview);
@@ -85,6 +69,7 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
             mMap.setMyLocationEnabled(true);
         } else {
             //request permission
+            int REQUEST_CODE_ASK_PERMISSIONS = 123;
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_CODE_ASK_PERMISSIONS);
         }
@@ -95,7 +80,7 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
             e.printStackTrace();
         }
         // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(50.440226, -5.043999), 2);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(51.023905, 6.921462), 4);
         mMap.animateCamera(cameraUpdate);
         return v;
     }
@@ -121,7 +106,6 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         addMarkersToMap();
         mMap.setOnInfoWindowClickListener(MyOnInfoWindowClickListener);
     }
@@ -130,79 +114,79 @@ public class MapTabFragment extends Fragment implements GoogleMap.OnMarkerClickL
     public boolean onMarkerClick(Marker marker) {
         return false;
     }
-
+    // adding markers to map, setting text and icon color
     private void addMarkersToMap() {
-        mBerlinSummerRave = mMap.addMarker(new MarkerOptions()
+        Marker berlinSummerRave = mMap.addMarker(new MarkerOptions()
                 .position(BERLINSUMRAVE)
                 .title("Berlin Summer Rave")
                 .snippet("Flughafen Tempelhof, Platz der Luftbrücke, 12101 Berlin, Germany")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mForbiddenfruit = mMap.addMarker(new MarkerOptions()
+        Marker forbiddenfruit = mMap.addMarker(new MarkerOptions()
                 .position(FORBIDDENFRUIT)
                 .title("Forbidden Fruit")
                 .snippet("Irish Museum of Modern Art, Royal Hospital Kilmainham, Dublin 8")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        mSwedenRockFest = mMap.addMarker(new MarkerOptions()
+        Marker swedenRockFest = mMap.addMarker(new MarkerOptions()
                 .position(SWEDENROCKFEST)
                 .title("Sweden Rock Festival")
                 .snippet("Nygatan 27 294 34 Solvesborg, Sweden")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mSonar = mMap.addMarker(new MarkerOptions()
+        Marker sonar = mMap.addMarker(new MarkerOptions()
                 .position(SONAR)
                 .title("Sonar")
                 .snippet("Fira Gran Via L'Hospitalet, Barcelona, Spain")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mHurricane = mMap.addMarker(new MarkerOptions()
+        Marker hurricane = mMap.addMarker(new MarkerOptions()
                 .position(HURRICANE)
                 .title("Hurricane")
                 .snippet("Eichenring, Scheeßel, Germany")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mWireless = mMap.addMarker(new MarkerOptions()
+        Marker wireless = mMap.addMarker(new MarkerOptions()
                 .position(WIRELESS)
                 .title("Wireless")
                 .snippet("Finsbury Park, London")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        mReggaeland = mMap.addMarker(new MarkerOptions()
+        Marker reggaeland = mMap.addMarker(new MarkerOptions()
                 .position(REGGAELAND)
                 .title("Reggaeland")
                 .snippet("Plaza nad Wisla, Plock, Poland")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        mWoodstock = mMap.addMarker(new MarkerOptions()
+        Marker woodstock = mMap.addMarker(new MarkerOptions()
                 .position(WOODSTOCK)
                 .title("Woodstock")
                 .snippet("Północna 4, 66-470 Kostrzyn nad Odrą, Poland")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mSummerjam = mMap.addMarker(new MarkerOptions()
+        Marker summerjam = mMap.addMarker(new MarkerOptions()
                 .position(SUMMERJAM)
                 .title("Summerjam")
                 .snippet("Fühlinger See, Cologne, Germany")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        mPaleo = mMap.addMarker(new MarkerOptions()
+        Marker paleo = mMap.addMarker(new MarkerOptions()
                 .position(PALEO)
                 .title("Paleo")
                 .snippet("Route de Saint-Cergue 312, 1260 Nyon, Suisse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mTommorowland = mMap.addMarker(new MarkerOptions()
+        Marker tommorowland = mMap.addMarker(new MarkerOptions()
                 .position(TOMORROWLAND)
                 .title("Tommorowland")
                 .snippet("PRC de Schorre, Schommelei, 2850 Boom, Belgium")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mBoardmasters = mMap.addMarker(new MarkerOptions()
+        Marker boardmasters = mMap.addMarker(new MarkerOptions()
                 .position(BOARDMASTERS)
                 .title("Boardmasters")
                 .snippet("Trebelsue Farm Watergate Bay, Newquay, Cornwall TR8 4AN")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mHipHopKemp = mMap.addMarker(new MarkerOptions()
+        Marker hipHopKemp = mMap.addMarker(new MarkerOptions()
                 .position(HIPHOPKEMPT)
                 .title("Hip Hop Kemp")
                 .snippet("Hradec Králové - Rusek, Czech Republic")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        mOutlook = mMap.addMarker(new MarkerOptions()
+        Marker outlook = mMap.addMarker(new MarkerOptions()
                 .position(OUTLOOK)
                 .title("Outlook")
                 .snippet("Pula, Croatia")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mOnelove = mMap.addMarker(new MarkerOptions()
+        Marker onelove = mMap.addMarker(new MarkerOptions()
                 .position(ONELOVE)
                 .title("One Love")
                 .snippet("Hala Stulecia, Wroclaw, Poland")
